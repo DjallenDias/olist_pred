@@ -14,6 +14,27 @@ O projeto combina:
 
 **Fonte dos dados:** [Brazilian E-Commerce Public Dataset by Olist (Kaggle)](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce).
 
+## Arquitetura
+
+```text
+CSVs da Olist
+    │
+    ▼
+PostgreSQL
+    ├── raw     → ingestão dos arquivos originais
+    ├── silver  → padronização, deduplicação e integridade
+    └── gold    → tabela analítica por pedido
+                    │
+                    ├── Metabase → dashboard operacional
+                    │
+                    └── Python → EDA técnico
+                                  │
+                                  ▼
+                            Machine Learning
+                                  │
+                       Validação e teste temporal
+```
+
 ## Tecnologias
 
 | Etapa | Ferramentas |
@@ -23,6 +44,17 @@ O projeto combina:
 | Machine Learning | scikit-learn |
 | Integração Python–PostgreSQL | SQLAlchemy, python-dotenv |
 | Persistência do modelo | joblib |
+
+## Engenharia de dados e features
+
+O pipeline integra informações de pedidos, itens, produtos, vendedores, clientes, localização, pagamentos e categorias. Entre as variáveis utilizadas estão:
+
+- **Prazo e tempo:** mês, dia da semana e hora da compra, tempo até aprovação e prazo estimado de entrega.
+- **Características do pedido:** quantidade de itens, produtos e vendedores distintos, preço, frete, peso e volume.
+- **Logística:** distância aproximada entre vendedor e cliente e tipo de trajeto por estado.
+- **Pagamento e produto:** quantidade de pagamentos, tipos de pagamento, parcelas e categoria principal.
+
+A previsão foi definida para ocorrer **após a aprovação do pedido**, momento em que o tempo de aprovação já é conhecido.
 
 ## Dashboard operacional
 
